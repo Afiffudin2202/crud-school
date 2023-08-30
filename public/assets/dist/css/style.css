@@ -1,0 +1,19 @@
+.navbar-toggler  {
+    cursor: pointer;
+   
+}
+
+.home {
+    height: 100vh;
+}
+.welcome-container {
+    margin-top: 300px;
+    
+    color: white;
+}
+
+.welcome{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
