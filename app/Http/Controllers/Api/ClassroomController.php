@@ -74,17 +74,21 @@ class ClassroomController extends Controller
                 'message' => 'not found'
             ], 404);
         }
+
         $rules = [
-            'name' => 'required|unique:classrooms,name'
+            'name' => 'required'
         ];
 
+        if ($request->has('name') && $request->name !== $classroom->name) {
+            $rules['name'] .= '|unique:classrooms,name';
+        }
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
             return response()->json([
                 'status' => 'errors',
                 'message' => 'the given data is invalid',
                 'errors' => $validator->errors()
-            ], 422);
+            ], 200);
         }
         $classroom->update($request->all());
 

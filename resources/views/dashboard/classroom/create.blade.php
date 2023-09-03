@@ -14,7 +14,7 @@
                             <label for="name" class="form-label">Name</label>
                             <input type="text" name="name" id="name" class="form-control @error('name')
                                 is-invalid
-                            @enderror">
+                            @enderror" value="{{ old('name') }}">
                             @error('name')
                                 <div class="invalid-feedback">
                                     {{ $message }}
