@@ -4,7 +4,7 @@
         <h1 class="h2">Student</h1>
     </div>
     <div class="row">
-        <div class="col-lg-8">
+        <div class="col-lg-10 col-md-12 col-sm-12">
             @if (session('success'))
                 <div class="alert alert-success">
                     {{  session('success')}}
