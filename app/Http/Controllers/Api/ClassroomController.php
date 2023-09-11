@@ -14,7 +14,7 @@ class ClassroomController extends Controller
      */
     public function index()
     {
-        $classroom = Classroom::with('students')->paginate(10);
+        $classroom = Classroom::with('students')->paginate(5);
         return response()->json([
             'status' => 'ok',
             'message' => 'found',
