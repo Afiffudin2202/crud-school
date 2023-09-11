@@ -17,38 +17,56 @@
                 </div>
                 <div class="card-body col-lg-6">
                     <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr class="bg-secondary bg-gradient">
-                                    <th scope="col">No</th>
-                                    <th scope="col">Class Name</th>
-                                    <th scope="col">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($classrooms as $classroom)
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $classroom['name'] }}</td>
-                                        <td class="d-flex  gap-3">
-                                            <button type="submit" class="btn btn-sm" onclick="window.location='{{ 'classroom/'.$classroom['id'] }}'">
-                                            <i class="fa-solid fa-eye text-success"></i>
-                                            </button>
-                                            <buttton type="submit" class="btn btn-sm"
-                                                onclick="window.location='{{ url('classroom/' . $classroom['id'] . '/edit') }}'">
-                                                <i class="fa-solid fa-pen-to-square fs-4 text-warning"></i></buttton>
-                                            <form action="{{ url('classroom/' . $classroom['id']) }}" method="post">
-                                                @csrf
-                                                @method('delete')
-                                                <button type="submit" class="btn btn-sm"
-                                                    onclick="return confirm('Are you sure ?')"><i
-                                                        class="fa-solid fa-trash fs-4 text-danger"></i></button>
-                                            </form>
-                                        </td>
+                        @if (!empty($classrooms['data']))
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr class="bg-secondary bg-gradient">
+                                        <th scope="col">No</th>
+                                        <th scope="col">Class Name</th>
+                                        <th scope="col">Action</th>
                                     </tr>
-                                @endforeach
-                            </tbody>
+                                </thead>
+
+                                <tbody>
+                                    {{-- from untuk nomor urut sesuai api --}}
+                                    <?php $i = $classrooms['from'] ?> 
+                                    @foreach ($classrooms['data'] as $classroom)
+                                        <tr>
+                                            <td>{{ $i++ }}</td>
+                                            <td>{{ $classroom['name'] }}</td>
+                                            <td class="d-flex  gap-3">
+                                                <button type="submit" class="btn btn-sm"
+                                                    onclick="window.location='{{ 'classroom/' . $classroom['id'] }}'">
+                                                    <i class="fa-solid fa-eye text-success"></i>
+                                                </button>
+                                                <buttton type="submit" class="btn btn-sm"
+                                                    onclick="window.location='{{ url('classroom/' . $classroom['id'] . '/edit') }}'">
+                                                    <i class="fa-solid fa-pen-to-square fs-4 text-warning"></i>
+                                                </buttton>
+                                                <form action="{{ url('classroom/' . $classroom['id']) }}" method="post">
+                                                    @csrf
+                                                    @method('delete')
+                                                    <button type="submit" class="btn btn-sm"
+                                                        onclick="return confirm('Are you sure ?')"><i
+                                                            class="fa-solid fa-trash fs-4 text-danger"></i></button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            @else
+                                <p>Tidak ada data</p>
+                        @endif
                         </table>
+                        @if ($classrooms['links'])
+                            <nav aria-label="Page navigation ">
+                                <ul class="pagination">
+                                    @foreach ($classrooms['links'] as $item)
+                                        <li class="page-item {{ $item['active'] ? 'active' : '' }}"><a class="page-link" href="{{ $item['url2'] }}">{!! $item['label'] !!}</a></li>
+                                    @endforeach
+                                </ul>
+                            </nav>
+                        @endif
                     </div>
                 </div>
             </div>

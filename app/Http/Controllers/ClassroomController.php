@@ -2,23 +2,38 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Classroom;
 use GuzzleHttp\Client;
+use App\Models\Classroom;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Pagination\LengthAwarePaginator;
+use PhpParser\Node\Expr\Exit_;
 
 class ClassroomController extends Controller
 {
+    // mengambil data dari api
+    const API_URL = "http://127.0.0.1:8000/api/classrooms";
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $current_url = url()->current(); //mengambil nilai dari url yang sedang di akses
         $client = new Client();
-        $url = "http://127.0.0.1:8000/api/classrooms";
+        $url = static::API_URL;
+        // menegecek apakah ada inputan request page
+        if ($request->input('page') !='') {
+            // jika ada, maka url di tambahkan dengan ?page dan isi ari request
+            $url .= "?page=".$request->input('page');
+        }
         $response = $client->request('GET', $url);
         $content = $response->getBody()->getContents();
         $contentArray = json_decode($content, true);
-        $data = $contentArray['classroom']['data'];
+        $data = $contentArray['classroom'];
+        // perulangan untuk data links
+        foreach ($data['links'] as $key => $value) {
+            $data['links'][$key]['url2'] = str_replace(static::API_URL,$current_url,$value['url']); // mereplace pemangilan dari api menjadi alamat yang di akses sekarang
+        }
 
         return view('dashboard.classroom.index', [
             'classrooms' => $data
@@ -112,7 +127,7 @@ class ClassroomController extends Controller
         $contentArray = json_decode($content, true);
         if ($contentArray['status'] !== 'ok') {
             $errors = $contentArray['errors'];
-            return redirect('classroom/'.$id.'/edit')->withErrors($errors)->withInput();
+            return redirect('classroom/' . $id . '/edit')->withErrors($errors)->withInput();
         }
 
         return redirect('classroom')->with('success', 'Successfully update class');
